@@ -7,11 +7,12 @@ import {
   Param,
   Delete,
   UsePipes,
-  ValidationPipe
-} from '@nestjs/common';
+  ValidationPipe, ParseIntPipe
+} from "@nestjs/common";
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { createUserProfileDto } from "./dto/create-profile.dto";
 
 @Controller('users')
 export class UsersController {
@@ -41,5 +42,13 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+
+  // path
+  @Post(':id/profiles')
+  @UsePipes(ValidationPipe)
+  async createProfileUser(@Param('id' , ParseIntPipe) id: number, @Body() createUserProfileDto: createUserProfileDto) {
+    return this.usersService.createUserProfile(+id, createUserProfileDto);
   }
 }
